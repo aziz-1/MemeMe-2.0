@@ -51,7 +51,7 @@
         <!--Sent Memes Table View Controller-->
         <scene sceneID="zcp-Br-cUN">
             <objects>
-                <tableViewController id="Ft7-dq-qKe" customClass="SentMemesTableViewController" customModule="demoMememe" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="Ft7-dq-qKe" customClass="SentMemesTableViewController" customModule="demoMememe" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="6Sr-ur-sPy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -73,7 +73,6 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="W8f-md-pFy">
-                        <barButtonItem key="leftBarButtonItem" title="Edit" id="yU0-Nb-dLa"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="ani-k8-lxn">
                             <connections>
                                 <action selector="originalView:" destination="Ft7-dq-qKe" id="KzE-6g-rlg"/>
@@ -132,7 +131,6 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" id="NsQ-Zo-2Ca">
-                        <barButtonItem key="leftBarButtonItem" title="Edit" id="5j7-Lj-NuC"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="TwY-6y-dul">
                             <connections>
                                 <action selector="originalView:" destination="a2d-Vi-2rF" id="cko-fa-VUd"/>
@@ -200,7 +198,11 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem systemItem="flexibleSpace" id="3hP-lF-zvq"/>
-                                    <barButtonItem systemItem="cancel" id="2v7-bR-ULe"/>
+                                    <barButtonItem systemItem="cancel" id="2v7-bR-ULe">
+                                        <connections>
+                                            <action selector="cancelButton:" destination="BYZ-38-t0r" id="j5S-BF-u6N"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>

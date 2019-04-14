@@ -19,16 +19,26 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
     @IBOutlet weak var shareNavItem: UIBarButtonItem!
     var selectedMeme: Meme!
     
-
- 
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         shareNavItem.isEnabled = false
         prepareTextField(textField: topText)
         prepareTextField(textField: bottomText)
         self.tabBarController?.tabBar.isHidden = true
+        
+        if let image = selectedMeme {
+            imagePickerView.image = image.originalImage
+            topText.text = image.topText
+            bottomText.text = image.bottomText
+            setVisible()
+        }
+       
+        
+    
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         
@@ -40,6 +50,7 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         
         super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
+        UnsubscribeToKeyboardNotificationsHide()
     }
     
     func generateMemedImage() -> UIImage {
@@ -53,18 +64,18 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         UIGraphicsEndImageContext()
         
         // TODO: Show toolbar and navbar
-      setHidden(hide: false)
+        setHidden(hide: false)
         
         return memedImage
     }
-
+    
     @IBAction func sharedMeme(_ sender: Any) {
         let sharedMeme = generateMemedImage()
         
         let activityController = UIActivityViewController(activityItems: [sharedMeme], applicationActivities: nil)
-       
         
-   
+        
+        
         activityController.completionWithItemsHandler = {
             (activity, done, items, error) in
             if(done && error == nil){
@@ -73,7 +84,7 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
                 activityController.dismiss(animated: true, completion: nil)
                 self.navigationController?.popToRootViewController(animated: true)
             }
-         
+            
         }
         
         present(activityController, animated: true, completion: nil)
@@ -82,13 +93,13 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
     
     func save() {
         // Create the meme
-     let meme = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, editedImage: generateMemedImage())
+        let meme = Meme(topText: topText.text!, bottomText: bottomText.text!, originalImage: imagePickerView.image!, editedImage: generateMemedImage())
         
         // Add it to the memes array in the Application Delegate
         let object = UIApplication.shared.delegate
         let appDelegate = object as! AppDelegate
         appDelegate.memes.append(meme)
-    
+        
         
     }
     
@@ -100,19 +111,15 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         present(imagePickerController, animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("Image picker did cancel")
-    }
     
-
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as! UIImage? {
-           view.layoutIfNeeded()
+            view.layoutIfNeeded()
             
             imagePickerView.image = image
             self.dismiss(animated: true, completion: nil)
-            topText.isHidden = false
-            bottomText.isHidden = false
+            setVisible()
             shareNavItem.isEnabled=true
         }
     }
@@ -123,7 +130,7 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
-
+    
     
     func unsubscribeFromKeyboardNotifications() {
         
@@ -135,9 +142,14 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    func UnsubscribeToKeyboardNotificationsHide() {
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
     @objc func keyboardWillShow(_ notification:Notification) {
         if bottomText.isEditing{
-        view.frame.origin.y -= getKeyboardHeight(notification)
+            view.frame.origin.y -= getKeyboardHeight(notification)
         }
         
     }
@@ -173,13 +185,13 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         default:
             topText.text = topText.text
             bottomText.text = bottomText.text
-   
+            
         }
     }
     
     func setHidden(hide: Bool){
-    toolbar.isHidden = hide
-    navBar.isHidden = hide
+        toolbar.isHidden = hide
+        navBar.isHidden = hide
     }
     
     func prepareTextField(textField: UITextField) {
@@ -197,10 +209,17 @@ class ViewController: UIViewController,  UIImagePickerControllerDelegate, UINavi
         textField.textAlignment = .center
         textField.delegate = self
         textField.autocapitalizationType = .allCharacters
-        
-        
-        
-        
+    
     }
+    
+    @IBAction func cancelButton(_ sender: Any) {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func setVisible(){
+        topText.isHidden = false
+        bottomText.isHidden = false
+    }
+    
 }
 

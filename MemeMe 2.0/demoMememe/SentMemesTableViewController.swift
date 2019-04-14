@@ -20,7 +20,7 @@ class SentMemesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,28 +34,35 @@ class SentMemesTableViewController: UITableViewController {
         return self.memes.count
     }
     
-   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "savedMeme")!
         let meme = self.memes[(indexPath as NSIndexPath).row]
         
         // Set the name and image
-       cell.imageView?.image = meme.editedImage
-    cell.textLabel?.text = meme.topText + " - " + meme.bottomText
+        cell.imageView?.image = meme.editedImage
+        cell.textLabel?.text = meme.topText + " - " + meme.bottomText
         
-    
+        
         return cell
     }
     
     
-
+    
     @IBAction func originalView(_ sender: Any) {
         let storyboard = UIStoryboard (name: "Main", bundle: nil)
         let resultVC = storyboard.instantiateViewController(withIdentifier: "ViewController")as! ViewController
         navigationController?.pushViewController(resultVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // instantiate a new Meme Detail View and present the meme in the Meme Detail View
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let resultVC = storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+        let meme = self.memes[(indexPath as NSIndexPath).row]
+        resultVC.selectedMeme = meme
+        navigationController?.pushViewController(resultVC, animated: true)
+    }
     
     
-   
 }

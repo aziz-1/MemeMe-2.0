@@ -64,4 +64,14 @@ class SentMemesCollectionViewController: UICollectionViewController {
         navigationController?.pushViewController(resultVC, animated: true)
 
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // instantiate a new Meme Detail View and present the meme in the Meme Detail View
+        let storyboard = UIStoryboard (name: "Main", bundle: nil)
+        let resultVC = storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+        let meme = self.memes[(indexPath as NSIndexPath).row]
+        resultVC.selectedMeme = meme
+        navigationController?.pushViewController(resultVC, animated: true)
+    }
+    
 }
